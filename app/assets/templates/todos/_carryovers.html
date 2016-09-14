@@ -1,0 +1,8 @@
+<span class="_{{ carryover }} carryovers"
+      ng-class="{'editable': current_date == 0}"
+      ng-if="carryover > 0 && current_date >= 0">
+  <ng-pluralize count="carryover"
+                when="{'1': 'Added 1 day ago.',
+                       'other': 'Added {} days ago.'}">
+  </ng-pluralize>
+</span>

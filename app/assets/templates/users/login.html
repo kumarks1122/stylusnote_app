@@ -1,0 +1,27 @@
+<div class="container-fluid">
+  <div class="container Login-Form-Container col-lg-6 col-lg-offset-4">
+    <h4>Login Form</h4>
+    <div class="Login-Form form1 col-lg-8 ">
+      <form class="new_user" id="new_user">
+        <div class="form-group">
+          <label for="user_email">Email</label><br />
+          <input class="form-control" autofocus="autofocus" type="email" value="" ng-model="loginUser.email" name="user[email]" id="user_email" />
+        </div>
+
+        <div class="field">
+          <label for="user_password">Password</label><br />
+          <input class="form-control" autocomplete="off" type="password" ng-model="loginUser.password" name="user[password]" id="user_password" />
+        </div>  
+        <br>
+        <div class="field">
+          <input name="user[remember_me]" type="hidden" value="0" /><input type="checkbox" value="1" name="user[remember_me]" id="user_remember_me" />
+          <label for="user_remember_me">Remember me</label>
+        </div>
+        <div class="actions">
+          <input type="submit" class="btn btn-primary loginbtn" ng-click="login()" name="commit" value="Log in" />
+        </div>
+        <div class="clearfix"></div>
+      </form>
+    </div>
+  </div>
+</div>

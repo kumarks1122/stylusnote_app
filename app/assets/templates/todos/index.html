@@ -1,0 +1,169 @@
+<div class="col-sm-8 col-sm-offset-2">
+  <div class="text-center">
+    <div class="spaceSwitcher">
+      <input type="radio" name="space" value="team" ng-model="todoType" ng-change="switchDate(+current_date)" id="space_team" class="spaceSwitcher-input" checked="">
+      <label for="space_team" class="spaceSwitcher-label">{{teamName}}</label>
+      <input type="radio" name="space" value="personal" ng-model="todoType" ng-change="switchDate(+current_date)" id="space_local" class="spaceSwitcher-input spaceSwitcher-personal">
+      <label for="space_local" class="spaceSwitcher-label">Personal</label>
+      <span class="spaceSwitcherActiveToggle"></span>
+    </div>
+  </div>
+  <!-- <ol class="current-cycle">
+    <div ng-hide="!isLoggedIn || plan.isFreePlan">
+      <li ng-repeat="day in dailyProgress track by $index"
+          ng-class="{'complete': (day.period == 'past' && day.completions > 0) || (day.period == 'today' && completed_today > 0)}"
+          ng-click="jumpToDate(day.date)"
+          class="{{day.period}}">
+          <span class="legend" ng-if="$index == 0">{{ current_month }}</span>
+          <span class="tooltip" ng-switch="day.period">
+            <strong ng-switch-when="past">{{ day.date }}<br /></strong>
+            <strong ng-switch-when="today">Today<br /></strong>
+            <strong ng-switch-when="future">{{ day.date }}</strong>
+          </span>
+      </li>
+    </div>
+  </ol> -->
+
+  <nav class="date_switcher" ng-hide="!team.id && todoType=='team'">
+    <a class="previous" ng-click="todoLoading || switchDate(-1)">
+      <i class="fa fa-arrow-left"></i>
+    </a>
+    <h2 class="current">{{ date }}</h2>
+    <a class="previous" ng-hide="current_date==-1" ng-click="todoLoading || switchDate(1)">
+      <i class="fa fa-arrow-right"></i>
+    </a>
+    <a class="return" ng-show="current_date!=0" ng-click="todoLoading || switchDate(+current_date)">
+       Return to today
+    </a>
+  </nav>
+
+  <div class="card display-list" ng-hide="!team.id && todoType=='team'">
+    <ul class="card-options" ng-show="current_date <= 0">
+    <li>
+      <a id="add-task"
+         ng-class="{'active': current_date == 0 }"
+         ng-click="switchDate(current_date)">Today</a>
+    </li>
+    <li>
+      <a id="add-tomorrow"
+         ng-class="{'active': current_date == -1 }"
+         ng-click="switchDate(current_date + 1)">Tomorrow</a>
+    </li>
+    <!-- <li ng-if="isLoggedIn">
+      <a id="add-blocker" ng-click="go('/tasks/blockers', false, true)" >Blockers</a>
+    </li> -->
+    <li ng-if="isLoggedIn">
+      <a id="add-blocker" ng-click="exit('/tasks/blockers')" >Blockers</a>
+    </li>
+    <li ng-if="is_user_active" id="refresh">
+      <a ng-click="getTodos()">
+        Refresh
+      </a>
+    </li>
+  </ul>
+    <h2 class="question">{{ question }}</h2>
+    <div class="preloader" ng-show="todoLoading">
+      <i class="fa fa-spinner fa-spin fa-4x"></i>
+    </div>
+
+    <div class="active-list" ng-hide="todoLoading">
+      <ul class="task-list">
+        <li ng-repeat="todo in todos track by $index | limitTo: 30"
+            ng-show="todo.status=='new' || todo.status=='completed'"
+            on-finish-render="task-limit-check"
+            ng-mouseover="hover = $index"
+            ng-mouseleave="hover = nil"
+            ng-class="{'active': hover === $index && (current_date == 0 || current_date == -1)}"
+            id="task_{{$index}}">
+
+            <span class="handle" dnd-handle ng-hide="current_date != 0"></span>
+
+            <label ng-class="{
+                    'done': todo.status == 'completed',
+                    'tomorrow': current_date == -1,
+                    'editable': current_date == 0
+                   }"
+                   ng-hide="edit"
+                   ng-disabled="current_date > 0 || (current_date == -1 && !created_today)">
+              <div class="checkbox"
+                   ng-hide="current_date > 0 || (current_date == -1 && !created_today)">
+                <i class="fa fa-check" ng-click="changeTodoStatus(todo,'new')"></i>
+                <i class="fa fa-square-o" ng-click="changeTodoStatus(todo,'completed')"></i>
+                <i class="fa fa-square"></i>
+              </div>
+              <span class="content" ng-class="{'editable': current_date == 0}">{{ todo.text }}</span>
+              <div class="edit-options" ng-hide="current_date > 0">
+                <a class="incomplete option edit">
+                  <span class="tooltip">Edit</span>
+                  <i class="fa fa-edit" ng-click="edit = true"></i>
+                </a>
+                <a class="incomplete option delete">
+                  <span class="tooltip">Delete</span>
+                  <i class="fa fa-trash-o" ng-click="changeTodoStatus(todo,'deleted')"></i>
+                </a>
+                <a class="complete option archive">
+                  <span class="tooltip">Archive</span>
+                  <i class="fa fa-inbox" ng-click="changeTodoStatus(todo,'archived')"></i>
+                </a>
+              </div>
+              <carryovers created-at="{{ todo.created_at }}"></carryovers>
+            </label>
+
+            <form name="edit_form" class="edit_task"
+                  ng-show="edit"
+                  ng-submit="edit = false; updateTodo(todo)">
+              <input type="text" name="edit_todo" class="edit-todo" maxlength="100" placeholder="{{ placeholder }}" required autocomplete="off"
+                     ng-model="todo.text"
+                     ng-blur="edit = checkBlur('edit', todo, edit_form.$valid, edit)"
+                     ng-keydown="edit = checkKeyPress($event, 'edit', todo, edit_form.$valid)"
+                     show-focus="edit">
+            </form>
+        </li>
+      </ul>
+    </div>
+    <form name="add_form" class="new_task press-enter"
+        ng-submit="addTodo()"
+        ng-hide="(todoLoading && todos.length === 0) || current_date > 0 || ((todos | filter: {status:'new'}).length + (todos | filter: {status:'completed'} ).length >=5)">
+      <input type="text" id="add_todo" name="add_todo" placeholder="Type a task, then press Enter." maxlength="100" required autocomplete="off"
+             ng-model="newTodoText"
+             ng-blur="checkBlur('add', todo, add_form.$valid, edit)"
+             ng-keydown="checkKeyPress($event, 'add', todo, add_form.$valid)"
+             show-press-enter-on-focus />
+      <div class="prompt tooltip"
+           ng-class="{'show': show_task_entry_prompt}"
+           ng-show="current_date == 0"
+           ng-init="checkTaskPrompt();">
+        Write down your tasks to prioritize your day.
+      </div>
+    </form>
+  <section class="toggle-archived"
+           ng-show="(todos | filter: {status:'archived'}).length > 0"
+           toggle-archived-list>
+    <i class="fa fa-caret-right"></i>
+    <span class="description">Show archived</span>
+    <span class="archived-count">
+      <ng-pluralize count="(todos | filter: {status:'archived'}).length"
+            when="{'0': '0 tasks archived',
+                   '1': '1 task archived',
+                   'other': '{} tasks archived'}">
+      </ng-pluralize>
+    </span>
+  </section>
+
+  <div class="archived-list slide-toggle"
+       ng-show="(todos | filter: {status:'archived'}).length > 0">
+    <ul class="task-list" ng-class="{'disabled': current_date > 0}">
+      <li ng-repeat="todo in (todos | filter: {status:'archived'}) track by $index | limitTo: 30"
+          ng-class="{'active': hover === $index && (current_date == 0 || current_date == -1 && created_today)}"
+          id="task_{{$index}}">
+        <label class="done">
+          <span class="content">{{ todo.text }}</span>
+        </label>
+      </li>
+    </ul>
+  </div>
+  </div>
+  <div ng-if="!team.id && todoType=='team'" ng-include="'/assets/team/no_team.html'">
+    
+  </div>
+</div>

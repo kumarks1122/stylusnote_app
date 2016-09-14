@@ -1,0 +1,56 @@
+<div class="container-fluid">
+	<div class="container Edit-Form-Container col-lg-6 col-lg-offset-3">
+		<div class="Edit-Form-Title" ng-if="!editTeam.id">
+			Create team
+		</div>
+		<div class="Edit-Form-Title" ng-if="editTeam.id" class="edit-options">
+			Edit Team
+			<a ng-click="toggleAddMember()" class="option add-member-icon">
+				<i class="fa fa-user-plus" title="Add member to team"></i>
+				<span class="tooltip">Add member to team</span>
+			</a>
+		</div>
+		<div class="clearfix"></div>
+		<div class="Form-Content" ng-hide="showAddMember">
+			<form ng-submit="updateteam()">
+				<div class="form-group">
+					<label for="exampleInputName">Name *</label>
+					<input type="text" class="form-control" required id="exampleInputName" ng-model="editTeam.name" placeholder="Team Name">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputEmail">Email *</label>
+					<input type="email" class="form-control" required id="exampleInputEmail" ng-model="editTeam.email" placeholder="Team Email">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputEmail">Slack Hook Integration</label>
+					<input type="text" class="form-control" id="exampleInputEmail" ng-model="editTeam.slack_url" placeholder="Slack url">
+					<ul class="slack_instructions tip">
+						<h3>Instructions to slack hook:</h3>
+						<li>Open the <a href="https://my.slack.com/services/new/incoming-webhook">Incoming Webhooks Integration</a> in Slack</li>
+						<li>Create a new channel called "Stylusnote"</li>
+						<li>Click "Add Incoming Webhooks Integration"</li>
+						<li>Copy and paste the "Webhook URL" into the box below</li>
+					</ul>
+				</div>
+				<input type="submit" class="btn btn-default" value="Submit">
+				<input type="submit" class="btn btn-default" ng-show="editTeam.id" ng-click="removeMember(user.id)" value="Remove">
+			</form>
+		</div>
+		<div class="Form-Content" ng-show="showAddMember">
+			<form ng-submit="addMember()">
+				<h3 class="add-team-members-title">Add Team Members</h3>
+				<div class="form-group">
+					<label for="exampleInputEmail">Email *</label>
+					<input type="email" class="form-control" required id="exampleInputEmail" ng-model="addMemberEmail" placeholder="Member Email">
+				</div>
+				<ul class="edit-member-list">
+				    <li ng-repeat="team_mem in team_members track by $index" ng-hide="team_mem.id==user.id">
+				    	{{team_mem.name}}
+				    	<i class="fa fa-user-times" ng-click="removeMember(team_mem.id, $index)"></i>
+				    </li>
+				</ul>
+				<input type="submit" class="btn btn-default" value="Add member">
+			</form>
+		</div>
+	</div>
+</div>

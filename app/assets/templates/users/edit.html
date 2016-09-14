@@ -1,0 +1,29 @@
+<div class="container-fluid">
+	<div class="container Edit-Form-Container col-lg-6 col-lg-offset-3">
+		<div class="Edit-Form-Title">
+			Edit Your Profile
+		</div>
+		<div class="clearfix"></div>
+		<div class="Form-Content">
+			<form ng-submit="updateUser()">
+				<div class="form-group">
+					<label for="exampleInputName">Name *</label>
+					<input type="text" class="form-control" required id="exampleInputName" ng-model="editUser.name" placeholder="Your Name">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputEmail">Email *</label>
+					<input type="email" class="form-control" required disabled id="exampleInputEmail" ng-model="editUser.email" placeholder="Your Email">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputUsername">User Name</label>
+					<input type="text" class="form-control" id="exampleInputUsername" ng-model="editUser.username" placeholder="Username">
+				</div>
+				<div class="form-group">
+					<label for="exampleInputUrl">Profile Picture Url</label>
+					<input type="text" class="form-control" id="exampleInputUrl" ng-model="editUser.image_url" placeholder="Image Url">
+				</div>
+				<input type="submit" class="btn btn-default" value="Submit">
+			</form>
+		</div>
+	</div>
+</div>

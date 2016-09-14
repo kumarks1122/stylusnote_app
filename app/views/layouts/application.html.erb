@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html ng-app="cmApp" ng-controller="appController">
+  <head>
+    <title>Stylusnote</title>
+    <base href="/">
+    <!-- <%= csrf_meta_tags %> -->
+
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="wrapper">
+          <div class="side-bar">
+            <ul>
+              <li class="menu-head text-bold">
+                <strong>Stylusnote</strong> <a href="#" class="push_menu"><span class="fa fa-bars pull-right"></span></a>
+              </li>
+              <div class="menu" ng-show="is_user_active">
+                <li>
+                  <a href="/" ng-class="{'active': curPage=='/' || curPage=='/todos'}">Tasks <span class="fa fa-tasks pull-right"></span></a>
+                </li>
+                <li>
+                  <a href="/team" ng-class="{'active': curPage=='/team'}">Team<span class="fa fa-group pull-right"></span></a>
+                </li>
+                <li>
+                  <a href="/me" ng-class="{'active': curPage=='/me'}">Profile <span class="fa fa-user pull-right"></span></a>
+                </li>
+                <li>
+                  <a href="/team_settings" ng-class="{'active': curPage=='/team_settings'}">Team Settings <span class="fa fa-gears pull-right"></span></a>
+                </li>
+                <li>
+                  <a href="#" ng-click="logout()">Log out <span class="fa fa-power-off pull-right"></span></a>
+                </li>
+              </div>
+              <div class="menu" ng-hide="is_user_active">
+                <li>
+                  <a href="/login" ng-class="{'active': curPage=='/login'}">Login <span class="fa fa-caret-square-o-right pull-right"></span></a>
+                </li>
+                <li>
+                  <a href="/signup" ng-class="{'active': curPage=='/signup'}">Sign up<span class="fa fa-user pull-right"></span></a>
+                </li>
+              </div>
+
+            </ul>
+          </div>   
+          <div class="main_content">
+            <div class="col-md-12">
+              <div class="">
+                <%= yield %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- <div>
+      <div class="without-login-header">
+        <div class="app-main-header">
+          Stylusnote
+        </div>
+        <div class="col-sm-12 without-login-links" ng-hide="is_user_active">
+          <a href="/login">Login</a>
+          <a href="/signup">Signup</a>
+        </div>
+        <div class="col-sm-12 without-login-links" ng-show="is_user_active">
+          <a href="/">Tasks</a>
+          <a ng-click="logout()">Logout</a>
+          <a href="/team">Team</a>
+        </div>
+      </div>
+
+      <div class="container-fluid">
+        <div class="container">
+          <%= yield %>
+        </div>
+      </div>
+    </div>
+  </body> -->
+</html>

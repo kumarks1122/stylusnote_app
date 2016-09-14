@@ -1,0 +1,30 @@
+<section class="members" ng-hide="!team.id">
+  <section class="member col-sm-4 col-xs-12" ng-repeat="member in team_members track by $index" ng-class="{'col-sm-offset-2': $index%2==0,  'even-tabs':$index%2!=0}">
+    <!-- <a class="stars" data-method="patch" data-remote="true" href="/star/10093" id="star-10093" rel="nofollow">
+      <i class="fa fa-star-o fa-lg">
+      </i>
+      <i class="fa fa-star fa-lg">
+      </i>
+    </a> -->
+    <div class="col-lg-12">
+      <div class="frame">
+        <img class="team_profile default_profile _3" src="/assets/profiles/default-avatar-i.png"/>
+      </div>
+      <h3 class="name">
+        {{member.name}}
+      </h3>
+    </div>
+    <div class="clearfix"></div>
+    <ul>
+        <li ng-repeat="mem_todo in member.todos" class="member_todo {{mem_todo.status}}">
+          {{mem_todo.text}}
+        </li>
+        <li ng-if="member.todos.length==0" class="member_todo {{mem_todo.status}}">
+          --No tasks yet today--
+        </li>
+    </ul>
+  </section>
+</section>
+<div ng-if="!team.id" ng-include="'/assets/team/no_team.html'">
+
+</div>
