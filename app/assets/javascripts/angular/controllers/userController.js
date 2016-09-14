@@ -10,7 +10,7 @@ cmApp.controller("userController", ["$scope", "$timeout", "$location", "$rootSco
         Notification.success({message: "Logged in successfully", delay: 3000})
         $location.path('/')
       },function(error) {
-        Notification.success({message: error.message, delay: 3000})
+        Notification.error({message: error.data.message, delay: 3000})
         console.log(error.message)
       })
     }
@@ -28,7 +28,7 @@ cmApp.controller("userController", ["$scope", "$timeout", "$location", "$rootSco
         setSessionInfo(resp.token)
         $location.path('/')
       },function(error) {
-        console.log(error.message)
+        console.log(error.data.message)
       })
     }
   }

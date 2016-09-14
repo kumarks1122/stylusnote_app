@@ -1,3 +1,22 @@
+<div class="notes-container text-right">
+  <div class="text-left add-note-icon" ng-hide="newNoteVisible" ng-click="toggleNewNoteVisible()">
+    <i class="fa fa-plus-square"></i> Add
+  </div>
+  <span class="notes-icon"><img src="/assets/notes.png"></span>
+  <div class="notes-content">
+    <div class="note-data" ng-show="newNoteVisible">
+      <form>
+        <textarea spellcheck="false" ng-model="newNote.text" show-focus="newNoteVisible" ng-blur="updateNote(newNote);"></textarea>
+      </form>
+    </div>
+    <div class="note-data" ng-repeat="note in notes | orderBy:'-created_at'" ng-hide="note.status=='deleted'" ng-mouseover="noteHover = $index" ng-mouseleave="noteHover = nil">
+      <form>
+        <textarea spellcheck="false" ng-model="note.text" ng-focus="editNote=$index" ng-blur="updateNote(note);editNote=-1"></textarea>
+      </form>
+      <i ng-show="noteHover==$index || editNote==$index" class="fa fa-times-circle-o note-delete-icon" ng-click="removeNote(note)"></i>
+    </div>
+  </div>
+</div>
 <div class="col-sm-8 col-sm-offset-2">
   <div class="text-center">
     <div class="spaceSwitcher">
@@ -81,12 +100,12 @@
             <label ng-class="{
                     'done': todo.status == 'completed',
                     'tomorrow': current_date == -1,
-                    'editable': current_date == 0
+                    'editable': current_date <= 0
                    }"
                    ng-hide="edit"
                    ng-disabled="current_date > 0 || (current_date == -1 && !created_today)">
               <div class="checkbox"
-                   ng-hide="current_date > 0 || (current_date == -1 && !created_today)">
+                   ng-hide="current_date > 0">
                 <i class="fa fa-check" ng-click="changeTodoStatus(todo,'new')"></i>
                 <i class="fa fa-square-o" ng-click="changeTodoStatus(todo,'completed')"></i>
                 <i class="fa fa-square"></i>

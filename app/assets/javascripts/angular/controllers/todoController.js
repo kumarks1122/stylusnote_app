@@ -10,13 +10,14 @@ cmApp.controller("todoController", ["$scope","$http", "$httpParamSerializer", "$
 		$scope.todoType = !is_empty($rootScope.user.team_id) ? "team" : "personal"
 		$scope.todoLoading = false
 		$scope.addTodo = function() {
-			todoRoutes.create({todo: { text: $scope.newTodoText , status: 'new', item_type: $scope.todoType}},function(resp) {
+			todoRoutes.create({todo: { text: $scope.newTodoText , status: 'new', item_type: $scope.todoType, current_date: $scope.current_date}},function(resp) {
 				$scope.todos.push(resp.data)
 				$scope.newTodoText = ""
 			})
 		}
 
 		$scope.updateTodo = function(item) {
+			item.current_date = $scope.current_date
 			todoRoutes.update({id: item.id, todo: item},function(resp) {
 				angular.forEach($scope.todos,function(value) {
 					if (resp.data.id) {
@@ -25,6 +26,15 @@ cmApp.controller("todoController", ["$scope","$http", "$httpParamSerializer", "$
 				})
 			})
 		}
+
+		$(".notes-icon").click(function(){
+			$(".notes-container").toggleClass("active");
+		});
+		$(document).keyup(function(e) {
+			if (e.keyCode == 27) {
+				$(".notes-container").toggleClass("active");	
+			}
+		})
 
 		$scope.switchDate = function(new_date) {
 			$scope.current_date -= new_date;
@@ -39,7 +49,9 @@ cmApp.controller("todoController", ["$scope","$http", "$httpParamSerializer", "$
 			date = date==undefined ? moment(): date
 			todoRoutes.getTodos({date: date.format('MM/DD/YYYY'), item_type: $scope.todoType},function(resp) {
 				$scope.todoLoading = false
-				$scope.todos = resp
+				$scope.todos = resp.todos
+				$scope.notes = resp.notes
+				// $scope.notes = [{'text':"<p>sadfasdf asdf  asdf asdfasd fasdf </p><p>sadfasdf asdf  asdf asdfasd fasdf sadf asdf asdf</p><p>sadfasdf asdf  asdf asdfasd fasdf  dasf asdf asd fasd fams fasdfa </p>"},{'text':"<p>sadfasdf asdf  asdf asdfasd fasdf </p><p>sadfasdf asdf  asdf asdfasd fasdf sadf asdf asdf</p><p>sadfasdf asdf  asdf asdfasd fasdf  dasf asdf asd fasd fams fasdfa </p>"}]
 			})
 		}
 
@@ -60,6 +72,29 @@ cmApp.controller("todoController", ["$scope","$http", "$httpParamSerializer", "$
 				if ("edit" == actionType && 1 == editable) return $scope.updateTodo(editItem), !1;
 				"add" == actionType && $scope.addTodo()
 			}
+		}
+
+		$scope.newNote = {
+			text: ''
+		}
+		$scope.updateNote = function(note) {
+			todoRoutes.updateNotes({note: note},function(resp) {
+				console.log("success");
+				if ($scope.newNoteVisible) {
+					$scope.newNoteVisible = false
+					$scope.notes.push(resp)
+					$scope.newNote.text = ""
+				};
+			})
+		}
+
+		$scope.toggleNewNoteVisible = function() {
+			$scope.newNoteVisible = !$scope.newNoteVisible
+		}
+
+		$scope.removeNote = function(note) {
+			note.status = 'deleted'
+			$scope.updateNote(note)
 		}
 
 		$scope.slackHook = function(item,item_type) {

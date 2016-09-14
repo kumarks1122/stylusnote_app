@@ -57,7 +57,7 @@ function setSessionInfo(token) {
 }
 
 $(document).ready(function(){
-    $(".push_menu").click(function(){
-        $(".wrapper").toggleClass("active");
-    });
+	$(".push_menu").click(function(){
+		$(".wrapper").toggleClass("active");
+	});
 });

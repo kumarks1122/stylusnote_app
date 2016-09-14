@@ -37,7 +37,7 @@ class UsersController < ApplicationController
 				:username=> usr.username,
 				:todos => []
 			}
-			usr_todos = usr.items.where("item_type=? and status!='deleted' and ((updated_at <= ? and status='new') or (updated_at >= ? and updated_at <= ?))", 'team', Time.now.end_of_day, Time.now.beginning_of_day, Time.now.end_of_day)
+			usr_todos = usr.items.where("item_type=? and status!='deleted' and status!='archived' and ((updated_at <= ? and status='new') or (updated_at >= ? and updated_at <= ?))", 'team', Time.now.end_of_day, Time.now.beginning_of_day, Time.now.end_of_day)
 			user_data[:todos] = usr_todos
 			response_json << user_data
 		end

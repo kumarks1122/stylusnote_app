@@ -5,8 +5,7 @@ cmApp.factory('todoRoutes', ["$resource",
 		}, {
 			getTodos: {
 				url: '/todos',
-				method: 'GET',
-				isArray: true
+				method: 'GET'
 			},
 			create: {
 				url: '/todos',
@@ -19,6 +18,14 @@ cmApp.factory('todoRoutes', ["$resource",
 			delete: {
 				url: '/todos/:id',
 				method: 'DELETE'
+			},
+			getNotes: {
+				url: '/todos/notes',
+				method: 'GET'
+			},
+			updateNotes: {
+				url: '/todos/update_notes',
+				method: 'POST'
 			}
 		});
 		return rule;

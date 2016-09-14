@@ -32,3 +32,15 @@ cmApp.directive("toggleArchivedList", [
 		}
 	}
 ])
+
+cmApp.directive("showFocus", ["$timeout",
+	function(t) {
+		return function(e, n, i) {
+			e.$watch(i.showFocus, function() {
+				t(function() {
+					n[0].focus()
+				}, 50)
+			})
+		}
+	}
+])

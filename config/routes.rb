@@ -8,6 +8,7 @@ Rails.application.routes.draw do
   get "users/team_todos"
   post "users/add_member"
   post "users/remove_member"
+  post "todos/update_notes"
 
   resources :users
   resources :todos
