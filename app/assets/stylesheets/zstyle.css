@@ -1379,6 +1379,9 @@ input[type=checkbox], input[type=radio] { display:none; }
   font-size: 16px;
   margin-bottom: 0px;
 }
+.members .member ul li:last-child{
+  border-bottom: 1px solid #eee;
+}
 .member .member_todo.completed{
   text-decoration: line-through;
 }
