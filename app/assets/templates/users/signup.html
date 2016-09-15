@@ -1,25 +1,36 @@
 <div class="container-fluid">
-  <div class="container Login-Form-Container col-lg-6 col-lg-offset-4">
-    <h4>Signup Form</h4>
-    <div class="Login-Form form1 col-lg-8 ">
-      <form class="new_user" id="new_user">
+  <div class="container Login-Form-Container col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12">
+    <div class="Login-Form form1 col-sm-12">
+      <div class="welcome-title">
+        <h3 class="text-center">Welcome back!</h3>
+        <h4 class="text-center">Create an Account</h4>
+      </div>
+      <form class="new_user" id="new_user" ng-submit="signup()">
         <div class="form-group">
           <label for="user_email">Name</label><br />
-          <input class="form-control" autofocus="autofocus" type="name" value="" ng-model="signupUser.name" name="user[name]" id="user_name" />
+          <input class="form-control" autofocus="autofocus" readonly onfocus="this.removeAttribute('readonly');"  type="name" placeholder="Your Name *" ng-model="signupUser.name" name="user[name]" id="user_name" required />
         </div>
 
         <div class="form-group">
           <label for="user_email">Email</label><br />
-          <input class="form-control" autofocus="autofocus" type="email" value="" ng-model="signupUser.email" name="user[email]" id="user_email" />
+          <input class="form-control" autofocus="autofocus" readonly onfocus="this.removeAttribute('readonly');"  type="email" placeholder="Your Email *" ng-model="signupUser.email" name="user[email]" id="user_email" required />
         </div>
 
         <div class="field">
           <label for="user_password">Password</label><br />
-          <input class="form-control" autocomplete="off" type="password" ng-model="signupUser.password" name="user[password]" id="user_password" />
+          <input class="form-control" autocomplete="off" readonly onfocus="this.removeAttribute('readonly');"  type="password" placeholder="Password *" ng-model="signupUser.password" name="user[password]" id="user_password" required />
         </div>  
         <br>
         <div class="actions">
-          <input type="submit" class="btn btn-primary loginbtn" ng-click="signup()" name="commit" value="Log in" />
+          <button type="submit" class="btn btn-primary loginbtn" name="commit">
+            Create
+          </button>
+        </div>
+        <div class="clearfix">
+          
+        </div>
+        <div class="actions extra-link-text">
+          Already using Stylusnote?  <a href="/login">Login</a>
         </div>
         <div class="clearfix"></div>
       </form>

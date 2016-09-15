@@ -13,7 +13,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="wrapper">
-          <div class="side-bar">
+          <div class="side-bar" ng-show="is_user_active">
             <ul>
               <li class="menu-head text-bold">
                 <strong>Stylusnote</strong> <a href="#" class="push_menu"><span class="fa fa-bars pull-right"></span></a>
@@ -46,7 +46,7 @@
 
             </ul>
           </div>   
-          <div class="main_content">
+          <div class="main_content" ng-class="{'logged_in_main': is_user_active}">
             <div class="col-md-12">
               <div class="">
                 <%= yield %>

@@ -7,20 +7,24 @@ class UserManager
 
 	def login
 		user = User.find_by({:email=>@user_params[:email]})
-		password_md5 = Digest::MD5.hexdigest(@user_params[:password])
-		new_token = ""
-		new_token_date = Time.now.strftime('%s')
-		new_token = Digest::MD5.hexdigest("#{new_token_date}#{@user_params[:email]}")
-		if user.present? && user.password==password_md5
-			auth_tokens = user.auth_tokens
-			auth_tokens.update_all({:status=>'inactive'})
-			if auth_tokens.length>=5
-				auth_token = user.auth_tokens.order(:updated_at).first
-				auth_token.update_attributes({:token=>new_token, :status=>'active'})
+		if user.present?
+			password_md5 = Digest::MD5.hexdigest(@user_params[:password])
+			if user.password==password_md5
+				new_token = ""
+				new_token_date = Time.now.strftime('%s')
+				new_token = Digest::MD5.hexdigest("#{new_token_date}#{@user_params[:email]}")
+				auth_tokens = user.auth_tokens
+				auth_tokens.update_all({:status=>'inactive'})
+				if auth_tokens.length>=5
+					auth_token = user.auth_tokens.order(:updated_at).first
+					auth_token.update_attributes({:token=>new_token, :status=>'active'})
+				else
+					user.auth_tokens.create({:token=>new_token, :status=>'active'})
+				end
+				return {:response_code=> 200, :data=>{:token=> new_token}}
 			else
-				user.auth_tokens.create({:token=>new_token, :status=>'active'})
+				return {:response_code=> 400, :data=>{:message=> "Invalid email/password."}}
 			end
-			return {:response_code=> 200, :data=>{:token=> new_token}}
 		else
 			return {:response_code=> 400, :data=>{:message=> "Invalid email/password."}}
 		end
@@ -41,13 +45,17 @@ class UserManager
 	def signup
 		user = User.find_by({:email=>@user_params[:email]})
 		if user.nil?
-			password_md5 = Digest::MD5.hexdigest(@user_params[:password])
-			new_token = ""
-			new_token_date = Time.now.strftime('%Y%m%d')
-			new_token = Digest::MD5.hexdigest("#{new_token_date}#{@user_params[:email]}")
-			user = User.create({:name=>@user_params[:name], :email=> @user_params[:email], :password=>password_md5})
-			user.auth_tokens.create({:token=>new_token, :status=>'active'})
-			return {:response_code=> 200, :data=>{:token=> new_token, :user=> user} }
+			if @user_params[:password].present? && @user_params[:email].present? && @user_params[:name].present?
+				password_md5 = Digest::MD5.hexdigest(@user_params[:password])
+				new_token = ""
+				new_token_date = Time.now.strftime('%Y%m%d')
+				new_token = Digest::MD5.hexdigest("#{new_token_date}#{@user_params[:email]}")
+				user = User.create({:name=>@user_params[:name], :email=> @user_params[:email], :password=>password_md5})
+				user.auth_tokens.create({:token=>new_token, :status=>'active'})
+				return {:response_code=> 200, :data=>{:token=> new_token, :user=> user} }
+			else
+				return {:response_code=> 400, :data=>{:message=> "Invalid email."}}	
+			end
 		else
 			return {:response_code=> 400, :data=>{:message=> "Email already taken."}}
 		end
@@ -77,31 +85,33 @@ class UserManager
 	end
 
 	def slack_hook(item, current_user)
-		cm_icon_url = "https://media.licdn.com/mpr/mpr/shrink_200_200/AAEAAQAAAAAAAAf8AAAAJDZjZjNjNDIxLTgwNmMtNDQ2Ni05YWQ4LWRiMWQyOTY0OTE3Yw.png"
-		message_title = item.status == 'completed' ? item.user.name+" has completed a task" : item.status == 'new' ? item.user.name+" has created a task" : ""
-		message_format = {
-			"username": message_title,
-			"attachments": [{
-				"color": "#36a64f",
-				"fields": [{
-						"title": item.text
+		if(current_user.team.present? && current_user.team.slack_url.present?)
+			cm_icon_url = "https://media.licdn.com/mpr/mpr/shrink_200_200/AAEAAQAAAAAAAAf8AAAAJDZjZjNjNDIxLTgwNmMtNDQ2Ni05YWQ4LWRiMWQyOTY0OTE3Yw.png"
+			message_title = item.status == 'completed' ? item.user.name+" has completed a task" : item.status == 'new' ? item.user.name+" has created a task" : ""
+			message_format = {
+				"username": message_title,
+				"attachments": [{
+					"color": "#36a64f",
+					"fields": [{
+							"title": item.text
+					}]
 				}]
-			}]
-		}
-		message_format[:icon_url] = cm_icon_url
-		if item.user.image_url.present?
-			message_format[:icon_url] = item.user.image_url
-		end
-		if (message_title!="" && item.item_type=='team' && current_user.team.present? )
+			}
+			message_format[:icon_url] = cm_icon_url
+			if item.user.image_url.present?
+				message_format[:icon_url] = item.user.image_url
+			end
+			if (message_title!="" && item.item_type=='team' )
 
-			uri = URI.parse(current_user.team.slack_url)
-			http = Net::HTTP.new(uri.host, uri.port)
-			http.use_ssl = true
+				uri = URI.parse(current_user.team.slack_url)
+				http = Net::HTTP.new(uri.host, uri.port)
+				http.use_ssl = true
 
-			request = Net::HTTP::Post.new(uri.request_uri)
-			request.body = message_format.to_json
+				request = Net::HTTP::Post.new(uri.request_uri)
+				request.body = message_format.to_json
 
-			response = http.request(request)
+				response = http.request(request)
+			end
 		end
 	end
 	handle_asynchronously :slack_hook

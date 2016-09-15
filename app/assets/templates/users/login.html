@@ -1,26 +1,30 @@
 <div class="container-fluid">
-  <div class="container Login-Form-Container col-lg-6 col-lg-offset-4">
-    <h4>Login Form</h4>
-    <div class="Login-Form form1 col-lg-8 ">
-      <form class="new_user" id="new_user">
+  <div class="container Login-Form-Container col-md-4 col-md-offset-4 col-sm-6 col-sm-offset-3 col-xs-12">
+    <div class="Login-Form form1 col-lg-12">
+      <div class="welcome-title">
+        <h3 class="text-center">Welcome back!</h3>
+        <h4 class="text-center">Login</h4>
+      </div>
+      <form class="new_user" id="new_user" ng-submit="login()">
         <div class="form-group">
           <label for="user_email">Email</label><br />
-          <input class="form-control" autofocus="autofocus" type="email" value="" ng-model="loginUser.email" name="user[email]" id="user_email" />
+          <input class="form-control" autofocus="autofocus" readonly onfocus="this.removeAttribute('readonly');" type="email" placeholder="Email *" ng-model="loginUser.email" name="user[email]" id="user_email" required />
         </div>
 
         <div class="field">
           <label for="user_password">Password</label><br />
-          <input class="form-control" autocomplete="off" type="password" ng-model="loginUser.password" name="user[password]" id="user_password" />
+          <input class="form-control" readonly onfocus="this.removeAttribute('readonly');" type="password" placeholder="Password *" ng-model="loginUser.password" name="user[password]" id="user_password" required />
         </div>  
         <br>
-        <div class="field">
-          <input name="user[remember_me]" type="hidden" value="0" /><input type="checkbox" value="1" name="user[remember_me]" id="user_remember_me" />
-          <label for="user_remember_me">Remember me</label>
-        </div>
         <div class="actions">
-          <input type="submit" class="btn btn-primary loginbtn" ng-click="login()" name="commit" value="Log in" />
+          <button type="submit" class="btn btn-primary loginbtn" name="commit">
+            Log in
+          </button>
         </div>
         <div class="clearfix"></div>
+        <div class="actions extra-link-text">
+          Don't you have an accout?  <a href="/signup">Create an Account</a>
+        </div>
       </form>
     </div>
   </div>
