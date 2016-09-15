@@ -1330,13 +1330,14 @@ input[type=checkbox], input[type=radio] { display:none; }
 * Members start    *
 ********************/
 .members{
-  margin-top: 80px;
+  margin-top: 50px;
 }
 
 .member{
   border: 1px solid #ccc;
   border-radius: 9px;
   padding: 0px;
+  margin-top: 20px;
   background: #fdfcfc;
 }
 

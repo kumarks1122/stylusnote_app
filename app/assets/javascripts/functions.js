@@ -1,4 +1,4 @@
-var domains = ["http://stylusnote.dev", "http://localhost:3000", "https://stylusnote.co"];
+var domains = ["http://www.stylusnote.dev", "http://www.stylusnote.co:3000", "https://www.stylusnote.co"];
 
 function is_empty(data) {
 	return typeof(data)=='undefined' || data==undefined || data==null || data==''
