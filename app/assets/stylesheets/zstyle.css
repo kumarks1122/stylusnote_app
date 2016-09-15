@@ -1280,6 +1280,7 @@ input[type=checkbox], input[type=radio] { display:none; }
   margin-top: 80px;
   padding: 0px;
   border-radius: 10px;
+  margin-bottom: 50px;
   border: 1px solid #aaa;
 }
 .Edit-Form-Title{

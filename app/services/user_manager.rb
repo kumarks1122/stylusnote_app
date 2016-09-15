@@ -91,6 +91,7 @@ class UserManager
 			message_format = {
 				"username": message_title,
 				"attachments": [{
+					"fallback": item.text,
 					"color": "#36a64f",
 					"fields": [{
 							"title": item.text
